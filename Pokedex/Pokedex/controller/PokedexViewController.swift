@@ -15,7 +15,7 @@ class PokedexViewController: UIViewController {
     
     
     var Tableview1 : UITableView = UITableView()
-    var NameLabel : UILabel = UILabel()
+//    var NameLabel : UILabel = UILabel()
     func SetUp () {
         let table1 : UITableView = UITableView(frame: .zero)
         self.view.backgroundColor = .yellow
@@ -32,8 +32,7 @@ class PokedexViewController: UIViewController {
         table1.topAnchor.constraint(equalTo:      self.view.safeAreaLayoutGuide.topAnchor,      constant: -8).isActive = true
         table1.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
         table1.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: 8).isActive = true
-        NameLabel.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
-        NameLabel.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: 8).isActive = true
+     
         
         self.Tableview1 = table1
     }
