@@ -16,6 +16,7 @@
 		02C0A02E29207824007A88E3 /* PokedexTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C0A02D29207824007A88E3 /* PokedexTableViewController.swift */; };
 		02C0A033292144D4007A88E3 /* PageStructuresResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C0A032292144D4007A88E3 /* PageStructuresResults.swift */; };
 		02C0A03529217B12007A88E3 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C0A03429217B12007A88E3 /* Network.swift */; };
+		02C0A0442923319E007A88E3 /* PokeCellTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C0A0432923319E007A88E3 /* PokeCellTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		02C0A02D29207824007A88E3 /* PokedexTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexTableViewController.swift; sourceTree = "<group>"; };
 		02C0A032292144D4007A88E3 /* PageStructuresResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageStructuresResults.swift; sourceTree = "<group>"; };
 		02C0A03429217B12007A88E3 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		02C0A0432923319E007A88E3 /* PokeCellTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeCellTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 		02C0A02F29209694007A88E3 /* cell */ = {
 			isa = PBXGroup;
 			children = (
+				02C0A0432923319E007A88E3 /* PokeCellTableView.swift */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				02C0A03529217B12007A88E3 /* Network.swift in Sources */,
 				02C0A015292050F8007A88E3 /* AppDelegate.swift in Sources */,
 				02C0A033292144D4007A88E3 /* PageStructuresResults.swift in Sources */,
+				02C0A0442923319E007A88E3 /* PokeCellTableView.swift in Sources */,
 				02C0A017292050F8007A88E3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
