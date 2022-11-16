@@ -19,8 +19,8 @@ class pokeCellTableView : UITableViewCell {
         label.backgroundColor = .systemGreen
         label.numberOfLines = 0
         label.text = "Top"
-        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        label.widthAnchor.constraint(equalToConstant: 200).isActive = true
+//        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        label.widthAnchor.constraint(equalToConstant: 150).isActive = true
         return label
     }()
     
@@ -29,8 +29,8 @@ class pokeCellTableView : UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "Jayce")
         image.backgroundColor = .systemGray5
-        image.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
         return image
     }()
@@ -48,13 +48,20 @@ class pokeCellTableView : UITableViewCell {
     }
     
     private func createUI() {
-        let name = UILabel()
+        let name = NameLabel
+        let sprit = SpriteImage
         name.text = "mta"
+        contentView.addSubview(name)
+        contentView.addSubview(sprit)
+//        name.numberOfLines = 0
+//        name.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8).isActive = true
+        name.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8).isActive = true
+//        name.leadingAnchor.constraint(equalTo: sprit.trailingAnchor,constant: 8).isActive = true
+//        name.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
         
-        
-        
-    n
-        
+        sprit.topAnchor.constraint(equalTo: contentView.topAnchor,constant: +8).isActive = true
+        sprit.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
+        NameLabel = name
         
     }
 //    lazy var ImageSprite : UIImageView = {

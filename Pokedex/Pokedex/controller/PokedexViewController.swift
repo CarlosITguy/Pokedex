@@ -92,7 +92,7 @@ class PokedexViewController: UIViewController {
 extension PokedexViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 3
+        return 150
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -100,7 +100,15 @@ extension PokedexViewController : UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "pokeCellTableView", for: indexPath) as? pokeCellTableView else {
             return UITableViewCell()}
         cell.backgroundColor = .systemPurple
-        cell.NameLabel.text = "numms"
+
+        let network = Network()
+        network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/\(indexPath.row)/"){pruf in
+            DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                cell.NameLabel.text = "Cool pokemon: \(pruf?.name ?? "")"
+            }
+//            print(pruf?.sprites.front_default as Any)
+            
+        }
         
         
         return cell

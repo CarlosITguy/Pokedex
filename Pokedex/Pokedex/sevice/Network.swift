@@ -59,7 +59,7 @@ final class Network {
         
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            let httpResponse = response as? HTTPURLResponse
+            _ = response as? HTTPURLResponse
                 
             if let _ = error {
                 completion(nil)
