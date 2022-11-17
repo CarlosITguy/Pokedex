@@ -17,7 +17,7 @@ class PokeCellTableView : UITableViewCell {
         label.backgroundColor = .systemGray
         label.numberOfLines = 0
         label.text = "moves"
-//        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        label.font = UIFont.systemFont(ofSize: 5)//        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
         label.widthAnchor.constraint(equalToConstant: 200).isActive = true
         return label
     }()
@@ -37,7 +37,10 @@ class PokeCellTableView : UITableViewCell {
         let image = UIImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "Jayce")
-        image.backgroundColor = .magenta
+        image.backgroundColor = UIColor(patternImage: UIImage(named: "Jayce") ?? UIImage())
+
+//        image.background = UIImage(named: "Jayce")
+        image.backgroundColor = .clear
         image.tintColor = .systemGray2;
         image.heightAnchor.constraint(equalToConstant: 100).isActive = true
         image.widthAnchor.constraint(equalToConstant: 100).isActive = true

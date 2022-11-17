@@ -12,8 +12,12 @@ class PokedexViewController: UIViewController {
     let path = "https://pokeapi.co/api/v2/pokemon/30/"
     let path1 = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/5.png"
     let path2 = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=30"
-    
+    let basePathPagination = "https://pokeapi.co/api/v2/pokemon?limit=30&offset="
+    var offset = 0
+    let limit = 30
     var pokeDict: [Int: PokeResults] = [:]
+    var pokeSprit: [Int: Data] = [:]
+    var pokeMoves: [Int: [String]] = [:]
     
     var Tableview1 : UITableView = UITableView()
     var ImageView : UIImageView = UIImageView()
@@ -76,7 +80,7 @@ class PokedexViewController: UIViewController {
         }
         
         
-        let network2 = Network().fetchPageResults(url1: path2) { urlPokemon in
+        let _: () = Network().fetchPageResults(url1: path2) { urlPokemon in
             
             guard let urlPokemon = urlPokemon else {return}
             
@@ -103,7 +107,7 @@ class PokedexViewController: UIViewController {
 extension PokedexViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return  30
+        return  (offset + 1) * limit + 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -113,33 +117,56 @@ extension PokedexViewController : UITableViewDataSource {
         cell.backgroundColor = .systemPurple
         
         let network = Network()
-        
-        
-        network.fetchPageResults(url1: path2) { Pokemones in
+        print(Int(indexPath.row / limit))
+        print("https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit)")
+       
+            
+//        network.fetchPageResults(url1: "https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit))") { pokemones in
+//
+ network.fetchPageResults(url1: path2) { Pokemones in
+            self.offset = indexPath.row
             guard let Pokemones = Pokemones else {return}
+            print(Pokemones.results[indexPath.row%self.limit].url)
+            
 //            print("aqui checo pokemones url \(Pokemones.results[indexPath.row].name)")
-            network.pruebaPedirDatos(url1: Pokemones.results[indexPath.row].url) {pruf in
+            network.pruebaPedirDatos(url1: Pokemones.results[indexPath.row%(self.limit)].url) {pruf in
                 //        network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/\(indexPath.row)/"){pruf in
-                network.fetchImageData(path: pruf?.sprites.front_default ?? "" ) {rowdata in
+                network.fetchImageData(path: pruf?.sprites.front_default ?? "" ) {rawdata in
                     
                     //\                self.pokeDict[pruf?.id] = pruf
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() ) {
-                        guard rowdata != nil else {return}
-                        cell.NameLabel.text = pruf?.name ?? ""
-                        cell.SpriteImage.image = UIImage(data: rowdata ?? Data())
+                        guard let rawdata = rawdata  else {return}
+                        guard let pruf = pruf else {return}
+                        cell.NameLabel.text = pruf.name
+                        cell.SpriteImage.image = UIImage(data: rawdata )
+                        
+//                        let num = pruf.moves.count
+                        let Namess = pruf.moves.compactMap {
+                            return $0.move.name
+                                        }
+                        cell.MovesLabel.text = "\(Namess)"
+                        self.pokeDict = [indexPath.row : pruf]
+                        self.pokeSprit = [indexPath.row : rawdata]
+                        self.pokeMoves = [indexPath.row : Namess]
+//                        print(self.pokeMoves)
+                        self.ImageView.image = UIImage(data: rawdata)
+                            
+                        }
+//                        cell.MovesLabel.text = "moves \(pruf.moves[0].move.name)"
                     }
                 }
                 //            print(pruf?.sprites.front_default as Any)
             }
+        return cell
+
         }
         
         
         
-        return cell
         
     }
-}
+
 
 
 
