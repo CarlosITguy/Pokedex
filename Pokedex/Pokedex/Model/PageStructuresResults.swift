@@ -7,7 +7,9 @@
 
 import Foundation
 
-struct page : Decodable {
+struct PagePokes : Decodable {
+    
+    var results : [NameUrl]
     
 
 }

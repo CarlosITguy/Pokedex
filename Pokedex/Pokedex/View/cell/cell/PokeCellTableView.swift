@@ -8,19 +8,28 @@
 import Foundation
 import UIKit
 
-class pokeCellTableView : UITableViewCell {
+class PokeCellTableView : UITableViewCell {
     
     
-    
+    lazy var MovesLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .systemGray
+        label.numberOfLines = 0
+        label.text = "moves"
+//        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        label.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        return label
+    }()
 
     lazy var NameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = .systemGreen
+        label.backgroundColor = .systemGray2
         label.numberOfLines = 0
         label.text = "Top"
 //        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        label.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        label.widthAnchor.constraint(equalToConstant: 200).isActive = true
         return label
     }()
     
@@ -28,7 +37,8 @@ class pokeCellTableView : UITableViewCell {
         let image = UIImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "Jayce")
-        image.backgroundColor = .systemGray5
+        image.backgroundColor = .magenta
+        image.tintColor = .systemGray2;
         image.heightAnchor.constraint(equalToConstant: 100).isActive = true
         image.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
@@ -50,19 +60,43 @@ class pokeCellTableView : UITableViewCell {
     private func createUI() {
         let name = NameLabel
         let sprit = SpriteImage
-        name.text = "mta"
-        contentView.addSubview(name)
+        let moves = MovesLabel
+        
+        let vStack = UIStackView(frame: .zero)
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        vStack.axis = .vertical
+        vStack.spacing = 2
+        
+        let topBuffer = UIView.createBufferView()
+        let bottomBuffer = UIView.createBufferView()
+        
+        vStack.addArrangedSubview(topBuffer)
+        vStack.addArrangedSubview(name)
+        vStack.addArrangedSubview(moves)
+        vStack.addArrangedSubview(bottomBuffer)
+        
+        
+        self.contentView.addSubview(vStack)
+        
+//        contentView.addSubview(name)
         contentView.addSubview(sprit)
-//        name.numberOfLines = 0
-//        name.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8).isActive = true
-        name.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8).isActive = true
-//        name.leadingAnchor.constraint(equalTo: sprit.trailingAnchor,constant: 8).isActive = true
-//        name.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
+//        contentView.addSubview(moves)
+        //        name.numberOfLines = 0
+        vStack.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8).isActive = true
+        vStack.leadingAnchor.constraint(equalTo: sprit.trailingAnchor,constant: 8).isActive = true
+//        name.bottomAnchor.constraint(equalTo: moves.topAnchor, constant: -8).isActive = true
+        vStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -8).isActive = true
+//        moves.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
         
-        sprit.topAnchor.constraint(equalTo: contentView.topAnchor,constant: +8).isActive = true
-        sprit.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
-        NameLabel = name
+        //        name.leadingAnchor.constraint(equalTo: sprit.trailingAnchor,constant: 8).isActive = true
+        //        name.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
+        sprit.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8).isActive = true
         
+        sprit.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8).isActive = true
+        sprit.centerYAnchor.constraint(equalTo: contentView.centerYAnchor,constant: 0).isActive = true
+        NameLabel = name ; SpriteImage = sprit ; MovesLabel = moves
+        
+       
     }
 //    lazy var ImageSprite : UIImageView = {
 //        let img = UIImageView(frame: .zero)
