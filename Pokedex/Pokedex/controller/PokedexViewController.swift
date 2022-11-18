@@ -18,7 +18,7 @@ class PokedexViewController: UIViewController {
     var pokeDict: [Int: PokeResults] = [:]
     var pokeSprit: [Int: Data] = [:]
     var pokeMoves: [Int: [String]] = [:]
-    
+    var pokemons: [NameUrl]  = []
     var Tableview1 : UITableView = UITableView()
     var ImageView : UIImageView = UIImageView()
     //    var NameLabel : UILabel = UILabel()
@@ -49,14 +49,6 @@ class PokedexViewController: UIViewController {
         img.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
         img.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive = true
         
-        //        let network = Network()
-        //        network.fetchImageData(path: path1) {imagen  in
-        //            guard let imagen = imagen else {return}
-        //            DispatchQueue.main.asyncAfter(deadline: .now() ) {
-        //
-        //                img.image=UIImage(data: imagen) }
-        //
-        //        }
         
         self.ImageView = img
         self.Tableview1 = table1
@@ -67,39 +59,18 @@ class PokedexViewController: UIViewController {
         super.viewDidLoad()
         self.SetUp()
         Tableview1.dataSource = self
+        Tableview1.prefetchDataSource = self
         Tableview1.register(PokeCellTableView.self, forCellReuseIdentifier: "PokeCellTableView")
-        //        self.ImageView.image = UIImage(named: "Jayce")
-        
-        let network1 = Network()
-        network1.fetchImageData(path: path1) {imagen  in
-            guard let imagen = imagen else {return}
-            DispatchQueue.main.asyncAfter(deadline: .now() ) {
-                
-                self.ImageView.image=UIImage(data: imagen) }
-            
-        }
-        
-        
-        let _: () = Network().fetchPageResults(url1: path2) { urlPokemon in
-            
-            guard let urlPokemon = urlPokemon else {return}
-            
-            print("Aqui estas viendo el fetch para paginacion : \(urlPokemon.results[5].name)")
-        }
-        
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() ) {
         let network = Network()
-        network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/30/"){pruf in
-            //            guard let cell.celltablevir
             
-            
-            //            //            print(pruf as Any)
-            guard let pruf = pruf else { return }
-            print(pruf.moves[3].move.url as Any)
-            //                print(pruf.sprites.front_default as Any)
-            
+            network.fetchPageResults(url1: self.path2) { Pokemones in
+                guard let Pokemones = Pokemones else {return}
+                self.pokemons = Pokemones.results
+                print("this i called in te override func : \(self.pokemons.count)")
+            }
         }
-        
+       
     }
     
 }
@@ -107,7 +78,7 @@ class PokedexViewController: UIViewController {
 extension PokedexViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return  (offset + 1) * limit + 2
+        return  151 //self.pokemons.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -119,55 +90,65 @@ extension PokedexViewController : UITableViewDataSource {
         let network = Network()
         print(Int(indexPath.row / limit))
         print("https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit)")
-       
-            
-//        network.fetchPageResults(url1: "https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit))") { pokemones in
+        
 //
- network.fetchPageResults(url1: path2) { Pokemones in
-            self.offset = indexPath.row
-            guard let Pokemones = Pokemones else {return}
-            print(Pokemones.results[indexPath.row%self.limit].url)
-            
-//            print("aqui checo pokemones url \(Pokemones.results[indexPath.row].name)")
-            network.pruebaPedirDatos(url1: Pokemones.results[indexPath.row%(self.limit)].url) {pruf in
-                //        network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/\(indexPath.row)/"){pruf in
-                network.fetchImageData(path: pruf?.sprites.front_default ?? "" ) {rawdata in
+//                network.fetchPageResults(url1: "https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit))") { pokemones in
+        //
+        let Pokemones = self.pokemons
+        print("numero de pokemons: \(self.pokemons.count)")
+        print("numero de pfset: \(self.offset)")
+        print("numero de indexpath: \(indexPath.row)")
+        
+//                    print("aqui checo pokemones url \(Pokemones.results[indexPath.row].url)")
+//        Network().pruebaPedirDatos(url1: Pokemones[indexPath.row].url) {pruf in
+                    network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/\(indexPath.row)/"){pruf in
+            guard let pruf = pruf else {return}
+            network.fetchImageData(path: pruf.sprites.front_default) {rawdata in
+                
+                //\                self.pokeDict[pruf?.id] = pruf
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                    guard let rawdata = rawdata  else {return}
+//                    guard let pruf = pruf else {return}
+                    cell.NameLabel.text = pruf.name
+                    cell.SpriteImage.image = UIImage(data: rawdata )
                     
-                    //\                self.pokeDict[pruf?.id] = pruf
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() ) {
-                        guard let rawdata = rawdata  else {return}
-                        guard let pruf = pruf else {return}
-                        cell.NameLabel.text = pruf.name
-                        cell.SpriteImage.image = UIImage(data: rawdata )
-                        
-//                        let num = pruf.moves.count
-                        let Namess = pruf.moves.compactMap {
-                            return $0.move.name
-                                        }
-                        cell.MovesLabel.text = "\(Namess)"
-                        self.pokeDict = [indexPath.row : pruf]
-                        self.pokeSprit = [indexPath.row : rawdata]
-                        self.pokeMoves = [indexPath.row : Namess]
-//                        print(self.pokeMoves)
-                        self.ImageView.image = UIImage(data: rawdata)
-                            
-                        }
-//                        cell.MovesLabel.text = "moves \(pruf.moves[0].move.name)"
+                    //                        let num = pruf.moves.count
+                    let Namess = pruf.moves.compactMap {
+                        return $0.move.name
                     }
+                    cell.MovesLabel.text = "\(Namess)"
+                    self.pokeDict = [indexPath.row : pruf]
+                    self.pokeSprit = [indexPath.row : rawdata]
+                    self.pokeMoves = [indexPath.row : Namess]
+                    //                        print(self.pokeMoves)
+                    self.ImageView.image = UIImage(data: rawdata)
+                    
                 }
-                //            print(pruf?.sprites.front_default as Any)
+                //                        cell.MovesLabel.text = "moves \(pruf.moves[0].move.name)"
             }
-        return cell
-
         }
-        
-        
-        
-        
+        self.offset = indexPath.row
+        return cell
+   //            print(pruf?.sprites.front_default as Any)
     }
+    
+}
 
+extension PokedexViewController: UITableViewDataSourcePrefetching {
+    
+    // MARK: "New" way to do Pagination in UIKit
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        let lastIndexPath = IndexPath(row: self.pokemons.count - 1, section: 0)
+        guard indexPaths.contains(lastIndexPath) else { return }
+        print("we reach de bottom\(self.pokemons.count )")
+        
+        Network().fetchPageResults(url1:  "https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit)"){pokeAdd in
+            guard let pokeAdd = pokeAdd else {return}
+            self.pokemons.append(contentsOf: pokeAdd.results)
+        }
 
-
-
+    }
+    
+}
 
