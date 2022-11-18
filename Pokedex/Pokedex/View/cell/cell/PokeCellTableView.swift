@@ -10,14 +10,29 @@ import UIKit
 
 class PokeCellTableView : UITableViewCell {
     
-    
+    lazy var SpriteImageBakground : UIImageView = {
+        let image = UIImageView(frame: .zero)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "pokebolla5")
+        image.backgroundColor = UIColor(patternImage: UIImage(named: "pokeball") ?? UIImage())
+        
+        
+
+//        image.background = UIImage(named: "Jayce")
+        image.backgroundColor = .clear
+        image.tintColor = .clear;
+        image.heightAnchor.constraint(equalToConstant: 104).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 104).isActive = true
+        
+        return image
+    }()
     lazy var MovesLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = .systemGray
+        label.backgroundColor = .clear
         label.numberOfLines = 0
         label.text = "moves"
-        label.font = UIFont.systemFont(ofSize: 5)//        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        label.font = UIFont.systemFont(ofSize: 5)//
         label.widthAnchor.constraint(equalToConstant: 200).isActive = true
         return label
     }()
@@ -25,7 +40,7 @@ class PokeCellTableView : UITableViewCell {
     lazy var NameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = .systemGray2
+        label.backgroundColor = .clear
         label.numberOfLines = 0
         label.text = "Top"
 //        label.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -36,8 +51,9 @@ class PokeCellTableView : UITableViewCell {
     lazy var SpriteImage : UIImageView = {
         let image = UIImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.image = UIImage(named: "Jayce")
+        image.image = UIImage(named: "pokeball3")
         image.backgroundColor = UIColor(patternImage: UIImage(named: "Jayce") ?? UIImage())
+    
 
 //        image.background = UIImage(named: "Jayce")
         image.backgroundColor = .clear
@@ -47,6 +63,8 @@ class PokeCellTableView : UITableViewCell {
         
         return image
     }()
+    
+   
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -64,7 +82,8 @@ class PokeCellTableView : UITableViewCell {
         let name = NameLabel
         let sprit = SpriteImage
         let moves = MovesLabel
-        
+        let spritBackground = SpriteImageBakground
+
         let vStack = UIStackView(frame: .zero)
         vStack.translatesAutoresizingMaskIntoConstraints = false
         vStack.axis = .vertical
@@ -82,7 +101,10 @@ class PokeCellTableView : UITableViewCell {
         self.contentView.addSubview(vStack)
         
 //        contentView.addSubview(name)
+        contentView.addSubview(spritBackground)
         contentView.addSubview(sprit)
+      
+
 //        contentView.addSubview(moves)
         //        name.numberOfLines = 0
         vStack.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8).isActive = true
@@ -93,11 +115,16 @@ class PokeCellTableView : UITableViewCell {
         
         //        name.leadingAnchor.constraint(equalTo: sprit.trailingAnchor,constant: 8).isActive = true
         //        name.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8).isActive = true
+        spritBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 0).isActive = true
+        
+        spritBackground.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 0).isActive = true
+        spritBackground.centerYAnchor.constraint(equalTo: contentView.centerYAnchor,constant: 0).isActive = true
+        
         sprit.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 8).isActive = true
         
         sprit.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8).isActive = true
         sprit.centerYAnchor.constraint(equalTo: contentView.centerYAnchor,constant: 0).isActive = true
-        NameLabel = name ; SpriteImage = sprit ; MovesLabel = moves
+        SpriteImageBakground = spritBackground;  NameLabel = name ; SpriteImage = sprit ; MovesLabel = moves
         
        
     }

@@ -19,37 +19,52 @@ class PokedexViewController: UIViewController {
     var pokeSprit: [Int: Data] = [:]
     var pokeMoves: [Int: [String]] = [:]
     var pokemons: [NameUrl]  = []
+    var BackGroundimageview : UIImageView = UIImageView()
     var Tableview1 : UITableView = UITableView()
+    
+    
     var ImageView : UIImageView = UIImageView()
     //    var NameLabel : UILabel = UILabel()
     func SetUp () {
+        let backimg: UIImageView = UIImageView()
         let table1 : UITableView = UITableView(frame: .zero)
         let img : UIImageView = UIImageView(frame: .zero)
-        self.view.backgroundColor = .purple
-        table1.translatesAutoresizingMaskIntoConstraints = false
+        backimg.translatesAutoresizingMaskIntoConstraints = false
+        self.view.backgroundColor = .quaternarySystemFill
         img.translatesAutoresizingMaskIntoConstraints = false
         
-        img.backgroundColor = .systemPurple
-        table1.backgroundColor = .blue
+        img.backgroundColor = .clear
+        
+        self.view.addSubview(backimg)
         self.view.addSubview(table1)
         self.view.addSubview(img)
+        backimg.image = UIImage(named: "backgroudPokemon")
         
+        table1.translatesAutoresizingMaskIntoConstraints = false
+    
+        table1.backgroundColor = .white
         table1.dataSource = self
-        
-        
         table1.trailingAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -8).isActive = true
         table1.topAnchor.constraint(equalTo:     self.view.safeAreaLayoutGuide.topAnchor,      constant: 8).isActive = true
         table1.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
-        table1.bottomAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.bottomAnchor , constant: -200).isActive = true
+        table1.bottomAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.bottomAnchor , constant: -150).isActive = true
+        
+        backimg.topAnchor.constraint(equalTo: table1.bottomAnchor, constant: 0).isActive = true
+        
+        backimg.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -8).isActive = true
+        
+        backimg.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
+        backimg.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive = true
+        
         
         img.topAnchor.constraint(equalTo: table1.bottomAnchor, constant: 0).isActive = true
         
-        img.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -8).isActive = true
+        img.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -120).isActive = true
         
-        img.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
+        img.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 0).isActive = true
         img.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive = true
         
-        
+        self.BackGroundimageview = backimg
         self.ImageView = img
         self.Tableview1 = table1
     }
@@ -62,15 +77,19 @@ class PokedexViewController: UIViewController {
         Tableview1.prefetchDataSource = self
         Tableview1.register(PokeCellTableView.self, forCellReuseIdentifier: "PokeCellTableView")
         DispatchQueue.main.asyncAfter(deadline: .now() ) {
-        let network = Network()
+            let network = Network()
             
             network.fetchPageResults(url1: self.path2) { Pokemones in
                 guard let Pokemones = Pokemones else {return}
-                self.pokemons = Pokemones.results
+                self.pokemons.append(contentsOf: Pokemones.results)
+//                self.pokemons = Pokemones.results
                 print("this i called in te override func : \(self.pokemons.count)")
+                DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                    
+                    self.Tableview1.reloadData()}
             }
         }
-       
+        
     }
     
 }
@@ -78,49 +97,43 @@ class PokedexViewController: UIViewController {
 extension PokedexViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return  151 //self.pokemons.count
+        return self.pokemons.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("this is the index path \(indexPath)P")
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PokeCellTableView", for: indexPath) as? PokeCellTableView else {
-            return UITableViewCell()}
-        cell.backgroundColor = .systemPurple
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PokeCellTableView", for: indexPath) as? PokeCellTableView else {return UITableViewCell()}
         let network = Network()
-        print(Int(indexPath.row / limit))
-        print("https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit)")
         
-//
-//                network.fetchPageResults(url1: "https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit))") { pokemones in
-        //
-        let Pokemones = self.pokemons
-        print("numero de pokemons: \(self.pokemons.count)")
-        print("numero de pfset: \(self.offset)")
-        print("numero de indexpath: \(indexPath.row)")
         
-//                    print("aqui checo pokemones url \(Pokemones.results[indexPath.row].url)")
-//        Network().pruebaPedirDatos(url1: Pokemones[indexPath.row].url) {pruf in
-                    network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/\(indexPath.row)/"){pruf in
+        
+
+//  BASICS OF CELL
+        
+        print(0)
+
+//        network.pruebaPedirDatos(url1: "https://pokeapi.co/api/v2/pokemon/\(indexPath.row+1)/"){pruf in
+            
+            network.pruebaPedirDatos(url1: self.pokemons[indexPath.row].url) { pruf in
+            
             guard let pruf = pruf else {return}
             network.fetchImageData(path: pruf.sprites.front_default) {rawdata in
                 
-                //\                self.pokeDict[pruf?.id] = pruf
-                
+           
                 DispatchQueue.main.asyncAfter(deadline: .now() ) {
                     guard let rawdata = rawdata  else {return}
-//                    guard let pruf = pruf else {return}
                     cell.NameLabel.text = pruf.name
                     cell.SpriteImage.image = UIImage(data: rawdata )
                     
-                    //                        let num = pruf.moves.count
                     let Namess = pruf.moves.compactMap {
                         return $0.move.name
                     }
+                    cell.backgroundColor = .systemGray6
                     cell.MovesLabel.text = "\(Namess)"
-                    self.pokeDict = [indexPath.row : pruf]
-                    self.pokeSprit = [indexPath.row : rawdata]
-                    self.pokeMoves = [indexPath.row : Namess]
+                    self.pokeDict[indexPath.row+1] =   pruf
+                    self.pokeSprit[indexPath.row+1] =  rawdata
+                    self.pokeMoves[indexPath.row+1] =     Namess
+                    print("This is the number on storage : \(self.pokeDict.count)" )
                     //                        print(self.pokeMoves)
                     self.ImageView.image = UIImage(data: rawdata)
                     
@@ -130,7 +143,7 @@ extension PokedexViewController : UITableViewDataSource {
         }
         self.offset = indexPath.row
         return cell
-   //            print(pruf?.sprites.front_default as Any)
+        //            print(pruf?.sprites.front_default as Any)
     }
     
 }
@@ -143,11 +156,17 @@ extension PokedexViewController: UITableViewDataSourcePrefetching {
         guard indexPaths.contains(lastIndexPath) else { return }
         print("we reach de bottom\(self.pokemons.count )")
         
+       
+    
         Network().fetchPageResults(url1:  "https://pokeapi.co/api/v2/pokemon?offset=\(offset)&limit=\(limit)"){pokeAdd in
             guard let pokeAdd = pokeAdd else {return}
             self.pokemons.append(contentsOf: pokeAdd.results)
+            print("number of pokens apend  \(self.pokemons.count)")
+            DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                self.Tableview1.reloadData()
+            }
         }
-
+        
     }
     
 }
