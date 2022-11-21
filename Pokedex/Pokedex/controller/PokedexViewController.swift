@@ -9,18 +9,18 @@ import UIKit
 
 class PokedexViewController: UIViewController {
     
-    let path = "https://pokeapi.co/api/v2/pokemon/30/"
-    let path1 = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/5.png"
+//    let path = "https://pokeapi.co/api/v2/pokemon/30/"
+//    let path1 = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/5.png"
     let path2 = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=30"
-    let basePathPagination = "https://pokeapi.co/api/v2/pokemon?limit=30&offset="
-    var offset = 0
-    let limit = 30
-    var pokeDict: [Int: PokeResults] = [:]
-    var pokeSprit: [Int: Data] = [:]
-    var pokeMoves: [Int: [String]] = [:]
-    var pokemons: [NameUrl]  = []
+//    let basePathPagination = "https://pokeapi.co/api/v2/pokemon?limit=30&offset="
+    var offset      : Int               = 0
+    let limit       : Int               = 30
+    var pokeDict    : [Int: PokeResults] = [:]
+    var pokeSprit   : [Int: Data]       = [:]
+    var pokeMoves   : [Int: [String]]   = [:]
+    var pokemons    : [NameUrl]         = []
     var BackGroundimageview : UIImageView = UIImageView()
-    var Tableview1 : UITableView = UITableView()
+    var Tableview1  : UITableView = UITableView()
     
     
     var ImageView : UIImageView = UIImageView()
@@ -44,25 +44,23 @@ class PokedexViewController: UIViewController {
     
         table1.backgroundColor = .white
         table1.dataSource = self
-        table1.trailingAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -8).isActive = true
-        table1.topAnchor.constraint(equalTo:     self.view.safeAreaLayoutGuide.topAnchor,      constant: 8).isActive = true
-        table1.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
-        table1.bottomAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.bottomAnchor , constant: -150).isActive = true
+        table1.trailingAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -8).isActive =   true
+        table1.topAnchor.constraint(equalTo:     self.view.safeAreaLayoutGuide.topAnchor,      constant: 8).isActive =    true
+        table1.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive =    true
+        table1.bottomAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.bottomAnchor ,  constant: -150).isActive = true
         
         backimg.topAnchor.constraint(equalTo: table1.bottomAnchor, constant: 0).isActive = true
         
         backimg.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -8).isActive = true
         
-        backimg.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive = true
-        backimg.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive = true
+        backimg.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 8).isActive =  true
+        backimg.bottomAnchor.constraint(    equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive = true
         
         
         img.topAnchor.constraint(equalTo: table1.bottomAnchor, constant: 0).isActive = true
-        
-        img.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -120).isActive = true
-        
-        img.leadingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 0).isActive = true
-        img.bottomAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive = true
+        img.trailingAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.trailingAnchor ,constant: -120).isActive = true
+        img.leadingAnchor.constraint(equalTo:   self.view.safeAreaLayoutGuide.leadingAnchor,  constant: 0).isActive =    true
+        img.bottomAnchor.constraint(equalTo:    self.view.safeAreaLayoutGuide.bottomAnchor  , constant: -8).isActive =   true
         
         self.BackGroundimageview = backimg
         self.ImageView = img
@@ -75,7 +73,9 @@ class PokedexViewController: UIViewController {
         self.SetUp()
         Tableview1.dataSource = self
         Tableview1.prefetchDataSource = self
+        Tableview1.delegate = self
         Tableview1.register(PokeCellTableView.self, forCellReuseIdentifier: "PokeCellTableView")
+        Tableview1.backgroundColor = .white
         DispatchQueue.main.asyncAfter(deadline: .now() ) {
             let network = Network()
             
@@ -107,6 +107,7 @@ extension PokedexViewController : UITableViewDataSource {
         
         
         
+        
 
 //  BASICS OF CELL
         
@@ -133,6 +134,7 @@ extension PokedexViewController : UITableViewDataSource {
                     self.pokeDict[indexPath.row+1] =   pruf
                     self.pokeSprit[indexPath.row+1] =  rawdata
                     self.pokeMoves[indexPath.row+1] =     Namess
+                    print("This is the number on storage : \(self.pokeDict.count)" )
                     print("This is the number on storage : \(self.pokeDict.count)" )
                     //                        print(self.pokeMoves)
                     self.ImageView.image = UIImage(data: rawdata)
@@ -172,3 +174,17 @@ extension PokedexViewController: UITableViewDataSourcePrefetching {
 }
 
 
+extension PokedexViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let vc = DetailViewController()
+        vc.SpriteImage.image = UIImage (data: self.pokeSprit[indexPath.row+1] ?? Data())//
+        vc.title = "* \(self.pokeDict[indexPath.row+1]?.name ?? "Poquemon desconocido" ) *"
+        
+        vc.NameLabel.text = "\(pokeDict[indexPath.row+1].  )"
+//        vc.SpriteImage.image =  UIImage (named: "Jayce")
+//        vc.BackGroundimageview.image = UIImage (data: self.pokeSprit[indexPath.row+1] ?? Data())//(named: "Jayce")
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
